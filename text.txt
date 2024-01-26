@@ -1,7 +1,1 @@
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjVhNmM4YWUwYTZiOTMzYzZhYzg5MDdhIn0sImlhdCI6MTcwNTUwMjA3NH0.66SeaB4sAUFYMZWNy3JtbRaX1PsEEko01CfglR0Le5k
 
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjViMTEzZjdhNmU3Zjc4Yjk2YmMzM2UzIn0sImlhdCI6MTcwNjEwMzc5OX0._xV7KWbCP9GVBkEY4HOiIYcRQdb7U5F6CkILaeX-E3g
-
-
-mongodb+srv://Dileep:dileep1217@test.3ipk9ce.mongodb.net/?retryWrites=true&w=majority
