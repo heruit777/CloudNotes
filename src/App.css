@@ -1,38 +1,119 @@
-.App {
+.navbar-brand {
+  font-size: 25px !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.nav-link {
+  font-size: 17px;
+  color: white !important;
+}
+
+.nav-link-active {
+  color: #e90f95 !important;
+}
+
+.signup-container {
+  font-family: 'Signika Negative';
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 30%;
+  max-width: 100%;
+  margin: auto;
+  margin-top: 10px;
+  padding: 10px;
+  background: linear-gradient(to right bottom, #8c38a9, #ce3390, #f44c70, #ff7753, #fca642);
+}
+
+.signup-form {
+  background: linear-gradient(to right top, #ffffff, #d4caff, #a796ff, #7461ff, #1126ff);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.signup-form h2 {
+  margin: 5px;
+  text-align: center !important;
+}
+
+label {
+  display: block;
+  margin: 5px;
+  font-weight: bold;
+  font-size: 19px;
+}
+
+.form-control {
+  border: 1px solid black;
+}
+
+input {
+  width: 100%;
+  padding: 7px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border: 1px solid black;
+  box-shadow: none;
+}
+
+span {
+  display: block;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#terms-text {
+  margin: 15px 0;
+  font-size: 16px;
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.button-container {
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin: 15px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 0;
   }
-  to {
-    transform: rotate(360deg);
+
+  #addNote {
+    height: 100%;
+  }
+
+  #Notes {
+    height: 100%;
+  }
+
+  #About {
+    height: 100%;
+    width: 94% !important;
+    padding: 10px;
+    margin: 10px !important;
+  }
+
+  #SignIn {
+    width: 94% !important;
+    margin: 10px !important;
+  }
+
+  #SignUp {
+    width: 94% !important;
+    margin: 10px !important;
+  }
+
+  .modal-content {
+    margin-top: 70px;
+  }
+
+  .alert {
+    width: 90.5% !important;
+    margin-top: 9px !important;
+    margin-right: 17px !important;
   }
 }
