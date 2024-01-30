@@ -22,6 +22,7 @@ function Notes(props) {
     const ref = useRef(null);
     const refClose = useRef(null);
     const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" })
+    const [isDisabledUpdate, setIsDisabledUpdate] = useState(true)
 
     const updateNote = (currentNote) => {
         ref.current.click();
@@ -33,9 +34,11 @@ function Notes(props) {
         editNote(note.id, note.etitle, note.edescription, note.etag)
         refClose.current.click();
         props.showAlert("Updated Successfully", "success");
+        setIsDisabledUpdate(true)
     }
 
     const onChange = (e) => {
+        setIsDisabledUpdate(false);
         setNote({ ...note, [e.target.name]: e.target.value })
     }
 
@@ -68,12 +71,12 @@ function Notes(props) {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={refClose}>Close</button>
-                            <button type="button" className="btn btn-primary" disabled={!note.etitle.trim() || !note.edescription.trim()} onClick={handleClick}>Update Note</button>
+                            <button type="button" className="btn btn-primary" disabled={isDisabledUpdate} onClick={handleClick}>Update Note</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="signup-container" id='Notes' style={{ width: '90%', background: 'linear-gradient(to left bottom, #f54f6e, #f21a87, #de00aa, #af00d5, #2c36ff)' }}>
+            <div className="signup-container" id='Notes' style={{ width: '90%', background: 'linear-gradient(to left bottom, #d86479, fa85c0, #fa65dc, #6d79f7)'}}>
                 <div className="row">
                     <h1 className="my-1" style={{ textAlign: 'center' }}>Your Notes</h1>
                     {notes.map((note) => {
