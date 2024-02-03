@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import noteContext from '../context/notes/noteContext';
 
 function AddNote(props) {
     const context = useContext(noteContext);
     const { addNote } = context;
+    const descriptionRef = useRef("");
 
     const [note, setNote] = useState({ title: "", description: "", tag: "" })
 
@@ -13,29 +14,35 @@ function AddNote(props) {
         setNote({ title: "", description: "", tag: "" })
         props.showAlert("Added Successfully", "success");
     }
+    const isDescriptionEmpty = !note.description.trim();
 
     const onChange = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value })
     }
 
+    const handleContentChange = (e) => {
+        setNote({ ...note, description: e.target.innerHTML });
+    };
+
     return (
-        <div className="signup-container mb-4" id='addNote' style={{ width: '90%' }}>
+        <div className={`signup-container mb-5 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id='addNote' style={{ width: '70%' }} >
             <div>
-                <form className="form" style={{ width: '60%', marginLeft: '20%' }}>
-                    <h1 style={{ textAlign: 'center' }}>Add a Note</h1>
+                <form className="form mx-auto" id='addNote' style={{ width: '90%' }}>
+                    <h1 style={{ textAlign: 'center' }}>Take a note...</h1>
                     <div className="mb-2">
                         <label htmlFor="title" className="form-label">Title</label>
-                        <input type="text" className="form-control" id="title" name="title" aria-describedby="emailHelp" value={note.title} onChange={onChange} required placeholder="Required" />
+                        <input type="text" className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="title"
+                            aria-describedby="emailHelp" value={note.title} onChange={onChange} required placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="description" className="form-label">Description</label>
-                        <input type="text" className="form-control" id="description" name="description" value={note.description} onChange={onChange} required placeholder="Required" />
+                        <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="description" name="description" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="tag" className="form-label">Tag</label>
-                        <input type="text" className="form-control" id="tag" name="tag" value={note.tag} onChange={onChange} placeholder='Optional' />
+                        <input type="text" className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="tag" name="tag" value={note.tag} onChange={onChange} placeholder='Optional' onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
                     </div>
-                    <button type="submit" className="btn btn-primary mb-3" disabled={!note.title.trim() || !note.description.trim()} onClick={handleClick}>Add Note</button>
+                    <button type="submit" className="btn btn-primary mb-3" disabled={!note.title.trim() || isDescriptionEmpty} onClick={handleClick} >Add Note</button>
                 </form>
             </div>
         </div>

@@ -8,6 +8,12 @@ function Notes(props) {
     const context = useContext(noteContext);
     const { notes, getNotes, editNote } = context;
     let navigate = useNavigate();
+    const descriptionRef = useRef("");
+    const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" })
+    const ref = useRef(null);
+    const refClose = useRef(null);
+    const [isDisabledUpdate, setIsDisabledUpdate] = useState(true)
+    const { mode, toggleMode } = props;
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
@@ -19,14 +25,10 @@ function Notes(props) {
         // eslint-disable-next-line
     }, [])
 
-    const ref = useRef(null);
-    const refClose = useRef(null);
-    const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" })
-    const [isDisabledUpdate, setIsDisabledUpdate] = useState(true)
-
     const updateNote = (currentNote) => {
         ref.current.click();
         setNote({ id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag })
+        descriptionRef.current.innerText = currentNote.description;
     }
 
     const handleClick = (e) => {
@@ -42,26 +44,30 @@ function Notes(props) {
         setNote({ ...note, [e.target.name]: e.target.value })
     }
 
+    const handleContentChange = (e) => {
+        setNote({ ...note, edescription: e.target.innerHTML });
+        setIsDisabledUpdate(false);
+    };
+
     return (
         <>
-            <AddNote showAlert={props.showAlert} />
+            <AddNote showAlert={props.showAlert} mode={mode} toggleMode={toggleMode} />
             <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal" ref={ref}></button>
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
-                    <div className="modal-content">
+                    <div className={`modal-content ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`}>
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="exampleModalLabel">Edit Note</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <form className="my-3">
+                            <form className="my-3" style={{ color: props.mode === 'light' ? 'black' : 'white' }}>
                                 <div className="mb-3">
                                     <label htmlFor="title" className="form-label">Title</label>
-                                    <input type="text" className="form-control" id="etitle" name="etitle" aria-describedby="emailHelp" value={note.etitle} onChange={onChange} required />
+                                    <input type="text" className="form-control" id="etitle" name="etitle" aria-describedby="emailHelp" value={note.etitle} onChange={onChange} required placeholder='Required' />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description</label>
-                                    <input type="text" className="form-control" id="edescription" name="edescription" value={note.edescription} onChange={onChange} required />
+                                    <div className="form-control" id="description" name="description" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="tag" className="form-label" >Tag</label>
@@ -76,11 +82,11 @@ function Notes(props) {
                     </div>
                 </div>
             </div>
-            <div className="signup-container" id='Notes' style={{ width: '90%', background: 'linear-gradient(to left bottom, #d86479, fa85c0, #fa65dc, #6d79f7)'}}>
+            <div className={`signup-container mb-2 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id='Notes' style={{ width: '95%', boxShadow: 'none' }}>
                 <div className="row">
-                    <h1 className="my-1" style={{ textAlign: 'center' }}>Your Notes</h1>
-                    {notes.map((note) => {
-                        return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} />
+                    <h1 className="my-1 mb-4" style={{ textAlign: 'center', color: props.mode === 'light' ? 'black' : 'white' }}>Your Notes</h1>
+                    {[...notes].reverse().map((note) => {
+                        return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} toggleMode={toggleMode} />
                     })}
                 </div>
             </div>

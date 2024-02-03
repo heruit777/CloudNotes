@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 
 function Login(props) {
     const [credentials, setCredentials] = useState({ email: '', password: '' })
-    let navigate = useNavigate();
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    let navigate = useNavigate();
+    
     const getUrl = (path) => {
-        console.log(SERVER_URL+path)
-        return SERVER_URL+path
+        return SERVER_URL + path
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
