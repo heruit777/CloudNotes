@@ -4,7 +4,7 @@ const About = (props) => {
 
   return (
     <>
-      <div className="signup-container mx-auto p-4" id='About' style={{ width: '90%', color: props.mode === 'light' ? 'black' : 'white' }}>
+      <div className="signup-container mx-auto" id='About' style={{ width: '90%', color: props.mode === 'light' ? 'black' : 'white' }}>
         <div>
           <h1>Welcome to CloudNotes!</h1>
           <p>At CloudNotes, we're dedicated to providing you with a seamless and secure platform for storing your notes on the cloud. Our application is designed with simplicity and functionality in mind, allowing you to effortlessly create, update, and delete your notes from any device, anywhere.</p>

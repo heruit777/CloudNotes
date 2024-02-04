@@ -27,7 +27,7 @@ function Navbar(props) {
                             <Link className={`nav-link ${location.pathname === "/about" ? "nav-link-active" : ""}`} to="/about">About</Link>
                         </li>
                     </ul>
-                    <div className={`icons ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`}>
+                    <div className={`navIcons ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`}>
                         <i className="fa-solid fa-moon" id="moonIcons" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }} onClick={props.toggleMode} ></i>
                     </div>
                     {!localStorage.getItem('token') ? <form className="d-flex" role="search">

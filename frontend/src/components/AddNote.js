@@ -11,7 +11,8 @@ function AddNote(props) {
     const handleClick = (e) => {
         e.preventDefault();
         addNote(note.title, note.description, note.tag);
-        setNote({ title: "", description: "", tag: "" })
+        setNote({ title: "", description: "", tag: "" });
+        descriptionRef.current.innerHTML = "";
         props.showAlert("Added Successfully", "success");
     }
     const isDescriptionEmpty = !note.description.trim();
@@ -21,7 +22,8 @@ function AddNote(props) {
     }
 
     const handleContentChange = (e) => {
-        setNote({ ...note, description: e.target.innerHTML });
+        const cleanedContent = e.target.innerHTML.replace(/&nbsp;/g, " ").trim();
+        setNote({ ...note, description: cleanedContent });
     };
 
     return (

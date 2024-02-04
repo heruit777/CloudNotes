@@ -82,7 +82,7 @@ function Notes(props) {
                     </div>
                 </div>
             </div>
-            <div className={`signup-container mb-2 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id='Notes' style={{ width: '95%', boxShadow: 'none' }}>
+            <div className={`signup-container ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id='Notes' style={{ width: '95%', boxShadow: 'none' }}>
                 <div className="row">
                     <h1 className="my-1 mb-4" style={{ textAlign: 'center', color: props.mode === 'light' ? 'black' : 'white' }}>Your Notes</h1>
                     {[...notes].reverse().map((note) => {
