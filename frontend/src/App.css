@@ -16,7 +16,15 @@
   color: black;
 }
 
+.container-light a:hover {
+  color: black;
+}
+
 .container-dark a {
+  color: white !important;
+}
+
+.container-dark a:hover {
   color: white;
 }
 
@@ -50,7 +58,6 @@
 }
 
 .signup-form {
-  background: linear-gradient(to right top, #ffffff, #d4caff, #a796ff, #7461ff, #1126ff);
   padding: 15px;
   border-radius: 8px;
 }
@@ -58,6 +65,10 @@
 .signup-form h2 {
   margin: 5px;
   text-align: center !important;
+}
+
+#About {
+  padding: 1.3rem;
 }
 
 label {
@@ -91,8 +102,16 @@ div:empty:before {
   color: gray;
 }
 
+.cardParent {
+  min-height: 134px;
+  max-height: 800px;
+}
+
 .card-body {
   border-radius: 5.5px;
+  min-height: 120px !important;
+  max-height: 700px;
+  overflow: hidden;
 }
 
 .card-body:hover {
@@ -101,6 +120,22 @@ div:empty:before {
 
 .card-title {
   margin-right: 21px !important;
+}
+
+.card-text {
+  min-height: 24px;
+}
+
+.icons {
+  position: absolute;
+  bottom: 0;
+  height: 40px;
+  width: 100%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  border-radius: 8px;
 }
 
 .fa-thumbtack {
@@ -159,6 +194,7 @@ span {
     height: 100%;
     width: 100% !important;
     padding: 5px !important;
+    margin-bottom: 0.5rem !important;
   }
 
   .col-md-4 {
@@ -168,13 +204,14 @@ span {
 
   #About {
     height: 100%;
-    width: 94% !important;
+    width: 97% !important;
     padding: 1rem;
     margin-bottom: 1.2rem !important;
   }
 
   .signup-container {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 4rem !important;
+    width: 94%;
   }
 
   #SignIn {
@@ -183,7 +220,6 @@ span {
   }
 
   #SignUp {
-    width: 94% !important;
     margin: 10px !important;
   }
 

@@ -74,7 +74,7 @@ const NoteSate = (props) => {
     }
 
     return (
-        <NoteContext.Provider value={{ notes, addNote, editNote, deleteNote, getNotes }}>
+        <NoteContext.Provider value={{ notes, addNote, editNote, deleteNote, getNotes, setNotes }}>
             {props.children}
         </NoteContext.Provider>
     )

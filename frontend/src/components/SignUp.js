@@ -5,10 +5,12 @@ function SignUp(props) {
     const [credentials, setCredentials] = useState({ name: '', email: '', password: '', cpassword: '' })
     let navigate = useNavigate();
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
     const getUrl = (path) => {
-        console.log(SERVER_URL+path)
-        return SERVER_URL+path
+        console.log(SERVER_URL + path)
+        return SERVER_URL + path
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { name, email, password } = credentials;
@@ -36,8 +38,8 @@ function SignUp(props) {
     }
 
     return (
-        <div className='signup-container mx-auto' id='SignUp' style={{ padding: '0px' }}>
-            <form className="signup-form" onSubmit={handleSubmit}>
+        <div className={`signup-container mx-auto' id='SignUp' ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'} `} style={{ padding: '0px' }}>
+            <form className="signup-form" onSubmit={handleSubmit} style={{ color: props.mode === 'light' ? 'black' : 'white' }}>
                 <h2>Create an Account</h2>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Name:</label>

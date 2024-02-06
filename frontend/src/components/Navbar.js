@@ -12,7 +12,7 @@ function Navbar(props) {
     }
 
     return (
-        <nav className={`navbar navbar-expand-lg border-bottom border-2 ${props.mode === 'light' ? 'bg-white' : 'bg-#202124'}`}>
+        <nav className={`navbar navbar-expand-lg border-bottom border-2`}>
             <div className={`container-fluid ${props.mode === 'light' ? 'container-light' : 'container-dark'}`}>
                 <Link className="navbar-brand" to="/">CloudNotes</Link>
                 <button className="navbar-toggler  bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@ function Navbar(props) {
                     {!localStorage.getItem('token') ? <form className="d-flex" role="search">
                         <Link className="btn btn-primary mx-1" to="/login" role="button">Sign In</Link>
                         <Link className="btn btn-primary mx-1" to="/signup" role="button">Sign Up</Link>
-                    </form> : <button className="btn btn-primary mx-1" onClick={handleLogout}>Log Out</button>}
+                    </form> : <button className="btn btn-primary mx-1" onClick={handleLogout}>Sign Out</button>}
                 </div>
             </div>
         </nav>

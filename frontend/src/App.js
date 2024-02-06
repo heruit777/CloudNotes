@@ -62,8 +62,8 @@ function App() {
             <Routes>
               <Route exact path='/' element={<Home showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
               <Route exact path='/about' element={<About mode={mode} toggleMode={toggleMode} />} />
-              <Route exact path='/login' element={<Login showAlert={showAlert} />} />
-              <Route exact path='/signup' element={<SignUp showAlert={showAlert} />} />
+              <Route exact path='/login' element={<Login showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
+              <Route exact path='/signup' element={<SignUp showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
             </Routes>
           </div>
         </Router>

@@ -5,10 +5,11 @@ function Login(props) {
     const [credentials, setCredentials] = useState({ email: '', password: '' })
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     let navigate = useNavigate();
-    
+
     const getUrl = (path) => {
         return SERVER_URL + path
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await fetch(getUrl('/api/auth/login'), {
@@ -36,7 +37,7 @@ function Login(props) {
 
     return (
         <div className='signup-container mx-auto' id='SignIn' style={{ padding: '0px' }}>
-            <form className="signup-form" onSubmit={handleSubmit} style={{ backgroundColor: 'burlywood', borderRadius: '8px' }}>
+            <form className="signup-form" onSubmit={handleSubmit} style={{ color: props.mode === 'light' ? 'black' : 'white' }}>
                 <h2>Welcome Back ッ</h2>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email:</label>
