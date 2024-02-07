@@ -2,7 +2,8 @@ import { useState } from "react";
 import NoteContext from "../notes/noteContext";
 
 const NoteSate = (props) => {
-    const host = process.env.REACT_APP_SERVER_URL;
+    // const host = process.env.REACT_APP_SERVER_URL;
+    const host = 'http://localhost:5000'
     const notesInitial = []
     const [notes, setNotes] = useState(notesInitial)
 
@@ -16,6 +17,7 @@ const NoteSate = (props) => {
             }
         });
         const json = await response.json();
+        console.log('notes fetched')
         setNotes(json)
     }
 
@@ -31,11 +33,11 @@ const NoteSate = (props) => {
             body: JSON.stringify({ title, description, tag })
         });
         const newNote = await response.json();
-        setNotes(notes.concat(newNote))
+        setNotes([newNote, ...notes])
     }
 
     // EDIT
-    const editNote = async (id, title, description, tag) => {
+    const editNote = async (id, title, description, tag, pinnedAt) => {
         // eslint-disable-next-line
         const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
             method: 'PUT',
@@ -43,7 +45,7 @@ const NoteSate = (props) => {
                 'Content-Type': 'application/json',
                 "auth-token": localStorage.getItem('token')
             },
-            body: JSON.stringify({ title, description, tag })
+            body: JSON.stringify({ title, description, tag, pinnedAt })
         });
 
         const newNotes = JSON.parse(JSON.stringify(notes));
@@ -62,14 +64,14 @@ const NoteSate = (props) => {
     // DELETE
     const deleteNote = async (note) => {
         // eslint-disable-next-line
-        const response = await fetch(`${host}/api/notes/deletenote/${note._id}`, {
+        const response = await fetch(`${host}/api/notes/deletenote/${note.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 "auth-token": localStorage.getItem('token')
             }
         });
-        const newNotes = notes.filter((n) => n._id !== note._id);
+        const newNotes = notes.filter((n) => n._id !== note.id);
         setNotes(newNotes);
     }
 

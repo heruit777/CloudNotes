@@ -7,7 +7,7 @@ const { body, validationResult } = require('express-validator');
 // ROUTE 1: Get All the Notes using: GET "/api/notes/getuser". Login required
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
     try {
-        const notes = await Note.find({ user: req.user.id });
+        const notes = await Note.find({ user: req.user.id }).sort({date: -1});
         res.json(notes)
     } catch (error) {
         console.error(error.message);
@@ -43,13 +43,14 @@ router.post('/addnote', fetchuser, [
 
 // ROUTE 3: Update an existing Note using: PUT "/api/notes/updatenote". Login required
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
-    const { title, description, tag } = req.body;
+    const { title, description, tag, pinnedAt } = req.body;
     try {
         // Create a newNote object
         const newNote = {};
         if (title) { newNote.title = title };
         if (description) { newNote.description = description };
         if (tag) { newNote.tag = tag };
+        if (pinnedAt) {newNote.pinnedAt = pinnedAt};
 
         // Find the note to be updated and update it
         let note = await Note.findById(req.params.id);

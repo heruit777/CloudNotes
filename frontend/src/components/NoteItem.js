@@ -3,8 +3,8 @@ import noteContext from '../context/notes/noteContext';
 
 function NoteItem(props) {
     const context = useContext(noteContext);
-    const { deleteNote } = context;
-    const { note, updateNote, handlePinnedNotes } = props;
+    const { deleteNote, editNote } = context;
+    const { note, updateNote } = props;
     const [hide, setHide] = useState(false);
 
 
@@ -16,6 +16,10 @@ function NoteItem(props) {
         setHide(false);
     }
 
+    const handlePinnedNote = () => {
+        editNote(note._id, note.title, note.description, note.tag, Date.now());
+    }
+
     return (
         <div className='col-md-4' onClick={(e) => { updateNote(note) }}>
             <div className="cardParent card  my-1" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseExit}>
@@ -24,8 +28,8 @@ function NoteItem(props) {
                     <div className={`navIcons position-absolute top-0 end-0 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={hide ? {} : {
                         visibility: 'hidden'
                     }}>
-                        <i className="fa-solid fa-thumbtack" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }} onClick={(e) => {
-                            handlePinnedNotes(note.title);
+                        <i className="fa-solid fa-thumbtack" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }} onClick={(e) => {          
+                            handlePinnedNote();
                             e.stopPropagation();
                         }}></i>
                     </div>
