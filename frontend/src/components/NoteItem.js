@@ -3,8 +3,8 @@ import noteContext from '../context/notes/noteContext';
 
 function NoteItem(props) {
     const context = useContext(noteContext);
-    const { deleteNote, editNote } = context;
-    const { note, updateNote } = props;
+    const { deleteNote, editNote, setPinnedNotes, setNotes, notes, pinnedNotes } = context;
+    const { note, updateNote, isPinned } = props;
     const [hide, setHide] = useState(false);
 
 
@@ -16,8 +16,20 @@ function NoteItem(props) {
         setHide(false);
     }
 
-    const handlePinnedNote = () => {
-        editNote(note._id, note.title, note.description, note.tag, Date.now());
+    const handlePinnedNote = async() => {
+        await editNote(note._id, note.title, note.description, note.tag, Date.now());
+        setPinnedNotes([note, ...pinnedNotes]);
+        setNotes(notes.filter((val) => {
+            return val.title !== note.title;
+        }))
+    }
+
+    const handleUnPinnedNote = async() => {
+        await editNote(note._id, note.title, note.description, note.tag, 'none');
+        setPinnedNotes(pinnedNotes.filter((val) => {
+            return val.title !== note.title;
+        }))
+        setNotes([note, ...notes]);
     }
 
     return (
@@ -28,10 +40,16 @@ function NoteItem(props) {
                     <div className={`navIcons position-absolute top-0 end-0 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={hide ? {} : {
                         visibility: 'hidden'
                     }}>
+                        {!isPinned ? 
                         <i className="fa-solid fa-thumbtack" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }} onClick={(e) => {          
                             handlePinnedNote();
                             e.stopPropagation();
+                        }}></i> :
+                        <i className="fa-solid fa-thumbtack" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }} onClick={(e) => {          
+                            handleUnPinnedNote();
+                            e.stopPropagation();
                         }}></i>
+                        }
                     </div>
                     <p className="card-text">{note.description}</p>
                     <div className={`icons ${props.mode === 'light' ?
