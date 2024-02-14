@@ -7,7 +7,6 @@ function SignUp(props) {
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
     const getUrl = (path) => {
-        console.log(SERVER_URL + path)
         return SERVER_URL + path
     }
 
