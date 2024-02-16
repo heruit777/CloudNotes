@@ -49,7 +49,7 @@ router.post('/addnote', fetchuser, [
     }
 */
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
-    const { title, description, tag, pinnedAt } = req.body;
+    const { title, description, tag, pinnedAt, expireAt } = req.body;
     try {
         // Create a newNote object
         const newNote = {};
@@ -57,6 +57,7 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
         if (description) { newNote.description = description };
         if (tag) { newNote.tag = tag };
         if (pinnedAt) {newNote.pinnedAt = pinnedAt};
+        if (expireAt) {newNote.expireAt = expireAt};
         
         // Find the note to be updated and update it
         let note = await Note.findById(req.params.id);
@@ -65,14 +66,31 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
         if (note.user.toString() !== req.user.id) {
             return res.status(401).send("Not Allowed");
         }
-        if(!pinnedAt){
-            note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote}, {new: true})
-        } else if(pinnedAt.status){
-            note = await Note.findByIdAndUpdate(req.params.id, { $set: {...newNote, pinnedAt: pinnedAt.value} }, {new: true})
-        } else {
+
+        // Removing Schema properties
+        if(pinnedAt && pinnedAt.status == false){
             note = await Note.findByIdAndUpdate(req.params.id, { $unset:{pinnedAt: 1} }, {new: true})
-        } 
+            return res.json({ note });
+        }
         
+        if(expireAt && expireAt.status == false){
+            note = await Note.findByIdAndUpdate(req.params.id, { $unset:{expireAt: 1} }, {new: true})
+            return res.json({ note });
+        }
+
+        // Adding new Schema properties
+        if(pinnedAt && pinnedAt.status == true){
+            note = await Note.findByIdAndUpdate(req.params.id, { $set: {...newNote, pinnedAt: pinnedAt.value} }, {new: true})
+            return res.json({ note });
+        }
+        
+        if(expireAt && expireAt.status == true){
+            note = await Note.findByIdAndUpdate(req.params.id, { $set: {...newNote, expireAt: new Date(Date.now() + 11 * 1000)} }, {new: true})
+            return res.json({ note });
+        }
+
+        // editing title, description and tag
+        note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote}, {new: true})
         res.json({ note });
     } catch (error) {
         console.error(error.message);
