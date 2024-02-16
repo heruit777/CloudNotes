@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-//  const TTL = ;// In 30 days, notes will be removed from bin
 
 const NotesSchema = new Schema({
     user: {
@@ -25,7 +24,7 @@ const NotesSchema = new Schema({
     },
     expireAt: {
         type: Date,
-        expires: 11,
+        expires: 1,
     }
 }, {strict: false})
 

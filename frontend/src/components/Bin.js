@@ -1,7 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import Navbar from "./Navbar";
 import noteContext from "../context/notes/noteContext";
-import NoteItem from "./NoteItem";
 import TrashNoteitem from "./TrashNoteItem";
 
 const Bin = ({ mode, toggleMode, showAlert }) => {
@@ -19,7 +17,7 @@ const Bin = ({ mode, toggleMode, showAlert }) => {
                 <div className={`signup-container ${mode === 'light' ? 'signupContainer-light' :
                     'signupContainer-dark'}`} id='Notes' style={{ width: '95%', boxShadow: 'none' }}>
                     <div className="row">
-                        <h3 className="my-1 mb-4" style={{ textAlign: 'center', color: mode === 'light' ? 'black' : 'white' }}>Pinned</h3>
+                        <h3 className="my-1 mb-4" style={{ textAlign: 'center', color: mode === 'light' ? 'black' : 'white' }}>Recycle Bin</h3>
                         {trashedNotes.map((note) => {
                             return <TrashNoteitem key={note._id} note={note} mode={mode} showAlert={showAlert}/>
                         })}

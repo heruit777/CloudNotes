@@ -13,7 +13,6 @@ function AddNote(props) {
     const handleClick = (e) => {
         e.preventDefault();
         addNote(note.title, note.description, note.tag);
-        setNote({ title: "", description: "", tag: "" });
         descriptionRef.current.innerHTML = "";
         titleRef.current.innerHTML = "";
         props.showAlert("Added Successfully", "success");
@@ -28,7 +27,7 @@ function AddNote(props) {
         const cleanedContent = e.target.innerHTML.replace(/&nbsp;/g, " ").trim();
         setNote({ ...note, [e.target.getAttribute('name')]: cleanedContent });
     };
-
+    
     return (
         <>
             <div className={`${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={{
@@ -48,8 +47,7 @@ function AddNote(props) {
                         <div className="mb-2">
                             <label htmlFor="title" className="form-label">Title</label>
                             <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="title" contentEditable={true}
-                                aria-describedby="emailHelp" onInput={handleContentChange} required ref={titleRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} >
-                            </div>
+                                aria-describedby="emailHelp" onInput={handleContentChange} required ref={titleRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="description" className="form-label">Description</label>

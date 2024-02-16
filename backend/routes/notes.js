@@ -3,6 +3,7 @@ const router = express.Router();
 const fetchuser = require('../middleware/fetchuser');
 const Note = require('../models/Note');
 const { body, validationResult } = require('express-validator');
+const NOTE_EXPIRATION_TIME = 84600*30*1000; // 30days 1 day = 84600seconds and 30 days, but we want in ms so * by 1000
 
 // ROUTE 1: Get All the Notes using: GET "/api/notes/getuser". Login required
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
@@ -77,7 +78,7 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
             note = await Note.findByIdAndUpdate(req.params.id, { $unset:{expireAt: 1} }, {new: true})
             return res.json({ note });
         }
-
+        
         // Adding new Schema properties
         if(pinnedAt && pinnedAt.status == true){
             note = await Note.findByIdAndUpdate(req.params.id, { $set: {...newNote, pinnedAt: pinnedAt.value} }, {new: true})
@@ -85,10 +86,11 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
         }
         
         if(expireAt && expireAt.status == true){
-            note = await Note.findByIdAndUpdate(req.params.id, { $set: {...newNote, expireAt: new Date(Date.now() + 11 * 1000)} }, {new: true})
+            let expirationDate = new Date();
+            expirationDate = new Date(expirationDate.getTime() + NOTE_EXPIRATION_TIME);
+            note = await Note.findByIdAndUpdate(req.params.id, { $set: {...newNote, expireAt: expirationDate} }, {new: true})
             return res.json({ note });
         }
-
         // editing title, description and tag
         note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote}, {new: true})
         res.json({ note });

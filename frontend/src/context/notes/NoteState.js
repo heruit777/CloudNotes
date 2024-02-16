@@ -61,12 +61,12 @@ const NoteSate = (props) => {
             requestData.expireAt = {
                 status: true,
             }
-        } else {
+        } else if(expireAt === 'remove'){
             requestData.expireAt = {
                 status: false,
             }
         }
-
+        
         await fetch(`${host}/api/notes/updatenote/${id}`, {
             method: 'PUT',
             headers: {
@@ -77,7 +77,6 @@ const NoteSate = (props) => {
         });
         let newNotes = notes.filter((n) => n._id === id);
         if(newNotes.length){
-            console.log('update notes')
             setNotes(notes.map((val)=>{
                 if(val._id === id){
                     return {...val, title, description, tag};
@@ -85,7 +84,6 @@ const NoteSate = (props) => {
                 return val;
             }))
         } else {
-            console.log('update pinned notes')
             setPinnedNotes(pinnedNotes.map((val) => {
                 if(val._id === id){
                     return {...val, title, description, tag};

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import noteContext from '../context/notes/noteContext';
 
 function NoteItem(props) {
@@ -6,7 +6,14 @@ function NoteItem(props) {
     const { editNote, setPinnedNotes, setNotes, notes, pinnedNotes, setTrashedNotes, trashedNotes } = context;
     const { note, updateNote, isPinned } = props;
     const [hide, setHide] = useState(false);
+    const descriptionRef = useRef(null);
+    const titleRef = useRef(null);
 
+    useEffect(() => {
+        descriptionRef.current.innerHTML = note.description;
+        titleRef.current.innerHTML = note.title;
+        //eslint-disable-next-line
+    }, [notes, pinnedNotes])
 
     const handleMouseEnter = () => {
         setHide(true);
@@ -48,7 +55,7 @@ function NoteItem(props) {
         <div className='col-md-4' onClick={(e) => { updateNote(note) }}>
             <div className="cardParent card  my-1" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseExit}>
                 <div className={`card-body pb-1 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`}>
-                    <h5 className="card-title mb-3">{note.title}</h5>
+                    <div className="card-title mb-3" contentEditable={false} ref={titleRef}></div>
                     <div className={`navIcons position-absolute top-0 end-0 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={hide ? {} : {
                         visibility: 'hidden'
                     }}>
@@ -63,10 +70,11 @@ function NoteItem(props) {
                             }}></i>
                         }
                     </div>
-                    <p className="card-text">{note.description}</p>
+                    <div className="card-text" contentEditable={false} ref={descriptionRef}></div>
                     <div className={`icons ${props.mode === 'light' ?
-                        'signupContainer-light' : 'signupContainer-dark'}`} style={hide ? {} :
-                            { visibility: 'hidden' }}>
+                        'signupContainer-light' : 'signupContainer-dark'}`} style={hide ? {} : {
+                            visibility: 'hidden'
+                        }}>
                         <i className="fa-solid fa-trash mx-3" title="move to trash" onClick={(e) => {
                             moveToTrash();
                             e.stopPropagation();

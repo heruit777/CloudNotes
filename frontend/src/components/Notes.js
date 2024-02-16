@@ -30,8 +30,8 @@ function Notes(props) {
     const updateNote = (currentNote) => {
         ref.current.click();
         setNote({ _id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag })
-        descriptionRef.current.innerText = currentNote.description;
-        titleRef.current.innerText = currentNote.title;
+        descriptionRef.current.innerHTML = currentNote.description;
+        titleRef.current.innerHTML = currentNote.title;
     }
 
     const handleClick = (e) => {
@@ -53,7 +53,8 @@ function Notes(props) {
     }
 
     const handleContentChange = (e) => {
-        setNote({ ...note, [e.target.getAttribute('name')]: e.target.innerHTML });
+        const cleanedContent = e.target.innerHTML.replace(/&nbsp;/g, " ").trim();
+        setNote({ ...note, [e.target.getAttribute('name')]: cleanedContent });
         setIsDisabledUpdate(false);
     };
 
