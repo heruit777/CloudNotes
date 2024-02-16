@@ -15,9 +15,8 @@ import React, { useState, useEffect } from 'react';
 
 function App() {
   const [alert, setAlert] = useState(null);
-
-  const storedMode = localStorage.getItem('mode') || 'light';
-  const [mode, setMode] = useState(storedMode);
+  const initialColor = localStorage.getItem('mode') || 'light';
+  const [mode, setMode] = useState(initialColor);
 
   useEffect(() => {
     document.body.style.backgroundColor = mode === 'light' ? '#ffffff' : '#202124';

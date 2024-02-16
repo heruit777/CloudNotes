@@ -9,6 +9,7 @@ function Notes(props) {
     const { notes, getNotes, editNote, deleteNote, pinnedNotes, getPinnedNotes } = context;
     let navigate = useNavigate();
     const descriptionRef = useRef("");
+    const titleRef = useRef("");
     const [note, setNote] = useState({ _id: "", etitle: "", edescription: "", etag: "" })
     const ref = useRef(null);
     const refClose = useRef(null);
@@ -30,11 +31,12 @@ function Notes(props) {
         ref.current.click();
         setNote({ _id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag })
         descriptionRef.current.innerText = currentNote.description;
+        titleRef.current.innerText = currentNote.title;
     }
 
     const handleClick = (e) => {
         e.preventDefault();
-        if(note.etitle.length === 0 && note.edescription.length === 0){
+        if (note.etitle.length === 0 && note.edescription.length === 0) {
             deleteNote(note);
             props.showAlert("deleted Successfully", "success");
         } else {
@@ -51,7 +53,7 @@ function Notes(props) {
     }
 
     const handleContentChange = (e) => {
-        setNote({ ...note, edescription: e.target.innerHTML });
+        setNote({ ...note, [e.target.getAttribute('name')]: e.target.innerHTML });
         setIsDisabledUpdate(false);
     };
 
@@ -66,12 +68,13 @@ function Notes(props) {
                             <form className="my-3" style={{ color: props.mode === 'light' ? 'black' : 'white' }}>
                                 <div className="mb-2">
                                     <label htmlFor="title" className="form-label">Title</label>
-                                    <input type="text" className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="etitle"
-                                        aria-describedby="emailHelp" value={note.etitle} onChange={onChange} required placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
+                                    <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="etitle" contentEditable={true}
+                                        aria-describedby="emailHelp" onInput={handleContentChange} required ref={titleRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} >
+                                    </div>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description</label>
-                                    <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="description" name="description" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
+                                    <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="description" name="edescription" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="tag" className="form-label">Tag</label>
@@ -86,13 +89,13 @@ function Notes(props) {
                     </div>
                 </div>
             </div>
-            {pinnedNotes.length && (
+            {pinnedNotes.length > 0 && (
                 <div className={`signup-container ${props.mode === 'light' ? 'signupContainer-light' :
                     'signupContainer-dark'}`} id='Notes' style={{ width: '95%', boxShadow: 'none' }}>
                     <div className="row">
                         <h3 className="my-1 mb-4" style={{ textAlign: 'center', color: props.mode === 'light' ? 'black' : 'white' }}>Pinned</h3>
                         {pinnedNotes.map((note) => {
-                            return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} toggleMode={toggleMode} isPinned={true}/>
+                            return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} toggleMode={toggleMode} isPinned={true} />
                         })}
                     </div>
                 </div>
@@ -101,7 +104,7 @@ function Notes(props) {
                 <div className="row">
                     <h3 className="my-1 mb-4" style={{ textAlign: 'center', color: props.mode === 'light' ? 'black' : 'white' }}>Your Notes</h3>
                     {notes.map((note) => {
-                        return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} toggleMode={toggleMode} isPinned={false}/>
+                        return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} toggleMode={toggleMode} isPinned={false} />
                     })}
                 </div>
             </div>

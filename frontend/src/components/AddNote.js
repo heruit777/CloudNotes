@@ -23,7 +23,8 @@ function AddNote(props) {
 
     const handleContentChange = (e) => {
         const cleanedContent = e.target.innerHTML.replace(/&nbsp;/g, " ").trim();
-        setNote({ ...note, description: cleanedContent });
+        console.log(e.target.getAttribute('name'))
+        setNote({ ...note, [e.target.getAttribute('name')]: cleanedContent });
     };
 
     return (
@@ -33,8 +34,9 @@ function AddNote(props) {
                     <h1 style={{ textAlign: 'center' }}>Take a note...</h1>
                     <div className="mb-2">
                         <label htmlFor="title" className="form-label">Title</label>
-                        <input type="text" className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="title"
-                            aria-describedby="emailHelp" value={note.title} onChange={onChange} required placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
+                        <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="title" contentEditable={true}
+                            aria-describedby="emailHelp" onInput={handleContentChange} required data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} >
+                        </div>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="description" className="form-label">Description</label>
