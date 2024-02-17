@@ -1,14 +1,22 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import noteContext from "../context/notes/noteContext";
 
 const TrashNoteitem = ({ note, mode, showAlert }) => {
     const context = useContext(noteContext);
     const { trashedNotes, setTrashedNotes, editNote, deleteNote } = context;
     const [hide, setHide] = useState(false);
+    const descriptionRef = useRef(null);
+    const titleRef = useRef(null);
 
     const deleteDate = new Date(note.expireAt);
     const currentDate = new Date();
     const remainingDays = Math.round((deleteDate - currentDate) / (1000 * 84600));
+
+    useEffect(() => {
+        descriptionRef.current.innerHTML = note.description;
+        titleRef.current.innerHTML = note.title;
+        // eslint-disable-next-line
+    }, [])
 
     const handleMouseEnter = () => {
         setHide(true);
@@ -35,8 +43,9 @@ const TrashNoteitem = ({ note, mode, showAlert }) => {
             <div className="cardParent card  my-1" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseExit}>
                 <div className={`card-body ${mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={{padding: "0 1.5em 1.5em 1.5em"}}>
                     <span style={{position: "relative", left: "9em"}} title="Remaining Days">{remainingDays}days</span>
-                    <h5 className="card-title mb-3">{note.title}</h5>
-                    <p className="card-text">{note.description}</p>
+                    <div className="card-title mb-3" contentEditable={false} ref={titleRef}></div>
+                    <hr/>
+                    <div className="card-text" contentEditable={false} ref={descriptionRef}></div>
                     <div className={`icons ${mode === 'light' ?
                         'signupContainer-light' : 'signupContainer-dark'}`} style={hide ? {} : {
                             visibility: 'hidden'

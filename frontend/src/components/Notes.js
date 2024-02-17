@@ -44,6 +44,10 @@ function Notes(props) {
             props.showAlert("Updated Successfully", "success");
         }
         refClose.current.click();
+    }
+
+    const handleCloseClick = () => {
+        refClose.current.click();
         setIsDisabledUpdate(true);
     }
 
@@ -70,12 +74,18 @@ function Notes(props) {
                                 <div className="mb-2">
                                     <label htmlFor="title" className="form-label">Title</label>
                                     <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="etitle" contentEditable={true}
-                                        aria-describedby="emailHelp" onInput={handleContentChange} required ref={titleRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} >
+                                        aria-describedby="emailHelp" onInput={handleContentChange} required ref={titleRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} onPaste={(e) => {
+                                            e.preventDefault();
+                                            document.execCommand("insertText", false, e.clipboardData.getData('text/plain'));
+                                        }}>
                                     </div>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description</label>
-                                    <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="description" name="edescription" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
+                                    <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="description" name="edescription" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} onPaste={(e) => {
+                                        e.preventDefault();
+                                        document.execCommand("insertText", false, e.clipboardData.getData('text/plain'));
+                                    }} />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="tag" className="form-label">Tag</label>
@@ -84,7 +94,7 @@ function Notes(props) {
                             </form>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={refClose}>Close</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={refClose} onClick={handleCloseClick}>Close</button>
                             <button type="button" className="btn btn-primary" disabled={isDisabledUpdate} onClick={handleClick}>Update Note</button>
                         </div>
                     </div>

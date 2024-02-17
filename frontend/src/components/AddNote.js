@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef } from 'react';
 import noteContext from '../context/notes/noteContext';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function AddNote(props) {
     const context = useContext(noteContext);
@@ -27,7 +27,7 @@ function AddNote(props) {
         const cleanedContent = e.target.innerHTML.replace(/&nbsp;/g, " ").trim();
         setNote({ ...note, [e.target.getAttribute('name')]: cleanedContent });
     };
-    
+
     return (
         <>
             <div className={`${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={{
@@ -47,11 +47,17 @@ function AddNote(props) {
                         <div className="mb-2">
                             <label htmlFor="title" className="form-label">Title</label>
                             <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="title" name="title" contentEditable={true}
-                                aria-describedby="emailHelp" onInput={handleContentChange} required ref={titleRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
+                                aria-describedby="emailHelp" onInput={handleContentChange} required ref={titleRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} onPaste={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand("insertText", false, e.clipboardData.getData('text/plain'));
+                                }} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="description" className="form-label">Description</label>
-                            <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="description" name="description" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} />
+                            <div className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="description" name="description" contentEditable={true} onInput={handleContentChange} required ref={descriptionRef} data-placeholder="Required" onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} onPaste={(e) => {
+                                e.preventDefault();
+                                document.execCommand("insertText", false, e.clipboardData.getData('text/plain'));
+                            }} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="tag" className="form-label">Tag</label>

@@ -67,7 +67,7 @@ const NoteSate = (props) => {
             }
         }
         
-        await fetch(`${host}/api/notes/updatenote/${id}`, {
+        const noteData = await fetch(`${host}/api/notes/updatenote/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,6 +75,8 @@ const NoteSate = (props) => {
             },
             body: JSON.stringify(requestData)
         });
+        const res = await noteData.json();
+        console.log(res);
         let newNotes = notes.filter((n) => n._id === id);
         if(newNotes.length){
             setNotes(notes.map((val)=>{
@@ -123,7 +125,7 @@ const NoteSate = (props) => {
         const json = await response.json();
         
         setPinnedNotes(json.filter((val) => {
-            return val.pinnedAt;
+            return val.pinnedAt && !val.expireAt;
         }));
     }
 

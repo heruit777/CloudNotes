@@ -70,6 +70,7 @@ function NoteItem(props) {
                             }}></i>
                         }
                     </div>
+                    <hr/>
                     <div className="card-text" contentEditable={false} ref={descriptionRef}></div>
                     <div className={`icons ${props.mode === 'light' ?
                         'signupContainer-light' : 'signupContainer-dark'}`} style={hide ? {} : {
