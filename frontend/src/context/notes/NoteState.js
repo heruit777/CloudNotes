@@ -5,6 +5,7 @@ const NoteSate = (props) => {
     const host = process.env.REACT_APP_SERVER_URL;
     // const host = 'http://localhost:5000'
     const [notes, setNotes] = useState([]);
+    const [directoryContent, setDirectoryContent] = useState([]);
     const [pinnedNotes, setPinnedNotes] = useState([]);
     const [trashedNotes, setTrashedNotes] = useState([]);
 
@@ -20,20 +21,24 @@ const NoteSate = (props) => {
         const json = await response.json();
         
         setNotes(json.filter((val) => {
-            return !val.pinnedAt && !val.expireAt;
+            return val.typeName === 'note' &&  !val.pinnedAt && !val.expireAt;
         }))
     }
 
     // ADD
-    const addNote = async (title, description, tag) => {
+    const addNote = async (title, description, tag, parent) => {
         // eslint-disable-next-line
+        const data = {title, description, tag};
+        if(parent){
+            data.parent = parent;
+        }
         const response = await fetch(`${host}/api/notes/addnote`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 "auth-token": localStorage.getItem('token')
             },
-            body: JSON.stringify({ title, description, tag })
+            body: JSON.stringify(data)
         });
         const newNote = await response.json();
         setNotes([newNote, ...notes])
@@ -125,14 +130,14 @@ const NoteSate = (props) => {
         const json = await response.json();
         
         setPinnedNotes(json.filter((val) => {
-            return val.pinnedAt && !val.expireAt;
+            return val.typeName === 'note' && val.pinnedAt && !val.expireAt;
         }));
     }
 
     //get trashed notes
     const getTrashedNotes = async() => {
         const response = await fetch(`${host}/api/notes/fetchallnotes`, {
-            methods: 'GET',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 "auth-token": localStorage.getItem('token')
@@ -141,12 +146,47 @@ const NoteSate = (props) => {
         const json = await response.json();
 
         setTrashedNotes(json.filter((val) => {
-            return val.expireAt;
+            return val.typeName === 'note' && val.expireAt;
         }))
     }
 
+    // create folder
+    const createFolder = async(name, parent) => {
+        const sendData = {name};
+        if(parent){
+            sendData.parent = parent;
+        }
+        const data = await fetch(`${host}/api/notes/createFolder`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem('token')
+            },
+            body: JSON.stringify(sendData)
+        })
+        const res = await data.json();
+        console.log(res);
+    }
+
+    // get directory content based on directory name
+    const getDirectoryContent = async(directoryId) => {
+        if(!directoryId){
+            directoryId = 'none';
+        }
+        const data = await fetch(`${host}/api/notes/fetch/${directoryId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem('token')
+            }
+        })
+        const res = await data.json();
+        console.log(res);
+        setDirectoryContent(res);
+    }
+
     return (
-        <NoteContext.Provider value={{ notes, addNote, editNote, deleteNote, getNotes, setNotes, pinnedNotes, setPinnedNotes, getPinnedNotes, trashedNotes, setTrashedNotes, getTrashedNotes }}>
+        <NoteContext.Provider value={{ notes, addNote, editNote, deleteNote, getNotes, setNotes, pinnedNotes, setPinnedNotes, getPinnedNotes, trashedNotes, setTrashedNotes, getTrashedNotes, createFolder, getDirectoryContent, directoryContent, setDirectoryContent }}>
             {props.children}
         </NoteContext.Provider>
     )

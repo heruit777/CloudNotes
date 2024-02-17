@@ -4,15 +4,26 @@ import { Link } from "react-router-dom";
 
 function AddNote(props) {
     const context = useContext(noteContext);
-    const { addNote } = context;
+    const { addNote, createFolder } = context;
     const descriptionRef = useRef("");
     const titleRef = useRef("");
+    const ref = useRef(null);
 
     const [note, setNote] = useState({ title: "", description: "", tag: "" })
+    const [folderName, setFolderName] = useState("");
+
+    const formatId = (str) => {
+        if(!str || str === '/'){
+            return undefined;
+        }
+        const arr = str.split('-');
+        return arr[arr.length-1];
+    }
 
     const handleClick = (e) => {
         e.preventDefault();
-        addNote(note.title, note.description, note.tag);
+        
+        addNote(note.title, note.description, note.tag, formatId(window.location.pathname));
         descriptionRef.current.innerHTML = "";
         titleRef.current.innerHTML = "";
         props.showAlert("Added Successfully", "success");
@@ -28,13 +39,21 @@ function AddNote(props) {
         setNote({ ...note, [e.target.getAttribute('name')]: cleanedContent });
     };
 
+    const handleCreateFolderClick = () => {
+        setFolderName("");
+        createFolder(folderName, formatId(window.location.pathname));
+    }
+
+    const handlefolderName = (e) => {
+        setFolderName(e.target.value);
+    }
     return (
         <>
             <div className={`${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={{
                 display: 'flex', justifyContent: 'space-evenly', borderRadius: "8px",
                 boxShadow: '0 0 8px rgba(0, 0, 0, 0.3)', width: 'fit-content', margin: 'auto', padding: '10px',
             }}>
-                <i className="fa-solid fa-folder-plus" title="Create folder" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }}>
+                <i className="fa-solid fa-folder-plus" title="Create folder" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }} onClick={() => { ref.current.click(); }}>
                 </i>
                 <Link className='nav-link' to="/bin">
                     <i className="fa-solid fa-eye" title="See Recycle Bin" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }}></i>
@@ -65,6 +84,24 @@ function AddNote(props) {
                         </div>
                         <button type="submit" className="btn btn-primary mb-3" disabled={!note.title.trim() || isDescriptionEmpty} onClick={handleClick} >Add Note</button>
                     </form>
+                </div>
+            </div>
+            <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal1" ref={ref}></button>
+            <div className="modal fade" id="exampleModal1" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog" >
+                    <div className={`modal-content ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`}>
+                        <div className="modal-body">
+                            <form onSubmit={(e)=>{e.preventDefault()}} className="my-3" style={{ color: props.mode === 'light' ? 'black' : 'white' }}>
+                                <div className="mb-2">
+                                    <label htmlFor="Folder name" className="form-label">Folder Name</label>
+                                    <input type="text" className={`form-control ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id="folderName" name="folderName" value={folderName} onChange={handlefolderName} placeholder='Enter folder name' onFocus={(e) => e.target.classList.add('focused')} onBlur={(e) => e.target.classList.remove('focused')} autoComplete='off'/>
+                                </div>
+                            </form>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleCreateFolderClick}>Create folder</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

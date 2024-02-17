@@ -17,11 +17,11 @@ router.get('/fetchallnotes', fetchuser, async (req, res) => {
     }
 })
 
-router.get('/fetch/:directoryName', fetchuser, async (req, res) => {
+router.get('/fetch/:directoryId', fetchuser, async (req, res) => {
     try{
         let data;
-        if(req.params.directoryName !== 'undefined'){
-            data = await Note.find({user: req.user.id, parent: req.params.directoryName}).sort({date: -1});
+        if(req.params.directoryId !== 'none'){
+            data = await Note.find({user: req.user.id, parent: req.params.directoryId}).sort({date: -1});
         } else {
             data = await Note.find({user: req.user.id, parent: null}).sort({date: -1})
         }
@@ -37,7 +37,7 @@ router.post('/addnote', fetchuser, [
     body('title', 'Enter a title'),
     body('description', 'Enter a description'),], async (req, res) => {
         try {
-            const { title, description, tag } = req.body;
+            const { title, description, tag, parent } = req.body;
 
             // If there are errors, return Bad request and the errors
             const errors = validationResult(req);
@@ -45,9 +45,11 @@ router.post('/addnote', fetchuser, [
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const note = new Note({
-                title, description, tag, user: req.user.id
-            })
+            const data = {title, description, tag, user: req.user.id};
+            if(parent){
+                data.parent = parent;
+            }
+            const note = new Note(data)
             const savedNote = await note.save()
 
             res.json(savedNote)
@@ -139,8 +141,12 @@ router.delete('/deletenote/:id', fetchuser, async (req, res) => {
 // ROUTE 5: Create a folder
 router.post('/createFolder', fetchuser, async(req, res)=>{
     try{
-        const {name} = req.body;
-        const folder = new Folder({name, user: req.user.id})
+        const {name, parent} = req.body;
+        const data = {name, user: req.user.id};
+        if(parent){
+            data.parent = parent;
+        }
+        const folder = new Folder(data)
         const savedFolder = await folder.save()
         res.status(201).json(savedFolder);
     } catch(err){

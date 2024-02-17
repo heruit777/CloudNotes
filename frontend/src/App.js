@@ -1,18 +1,15 @@
 import './App.css';
 import Home from './components/Home';
 import About from './components/About';
+import Notes from './components/Notes';
 import Navbar from './components/Navbar';
 import Alert from './components/Alert';
 import Bin from './components/Bin';
 import NoteSate from './context/notes/NoteState';
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -58,13 +55,14 @@ function App() {
         <Router>
           <Navbar mode={mode} toggleMode={toggleMode} />
           <Alert alert={alert} />
-          <div className="container mt-3">
+          <div className="container mt-3"> 
             <Routes>
-              <Route path='/' element={<Home showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
-              <Route path='/about' element={<About mode={mode} toggleMode={toggleMode} />} />
-              <Route path='/login' element={<Login showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
-              <Route path='/signup' element={<SignUp showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
-              <Route path='/bin' element={<Bin showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
+              <Route path='/' element={<Home showAlert={showAlert} mode={mode} />} />
+              <Route path='/about' element={<About mode={mode} />} />
+              <Route path='/login' element={<Login showAlert={showAlert} mode={mode} />} />
+              <Route path='/signup' element={<SignUp showAlert={showAlert} mode={mode} />} />
+              <Route path='/bin' element={<Bin showAlert={showAlert} mode={mode} />} />
+              <Route path='/:directoryId' element={<Notes showAlert={showAlert} mode={mode} />} />
             </Routes>
           </div>
         </Router>
@@ -74,3 +72,11 @@ function App() {
 }
 
 export default App;
+/*
+  Following are the react component
+  Home
+  About
+  Login
+  Signup
+  Bin
+*/

@@ -30,7 +30,7 @@ const NotesSchema = new Schema({
         type: Date
     },
     parent: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         default: null,
     },
     expireAt: {

@@ -19,7 +19,7 @@ const FolderSchema = new Schema({
         default: "General"
     },
     parent: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         default: null,
     },
     typeName: {
