@@ -3,6 +3,7 @@ import Home from './components/Home';
 import About from './components/About';
 import Navbar from './components/Navbar';
 import Alert from './components/Alert';
+import Bin from './components/Bin';
 import NoteSate from './context/notes/NoteState';
 import {
   BrowserRouter as Router,
@@ -15,9 +16,8 @@ import React, { useState, useEffect } from 'react';
 
 function App() {
   const [alert, setAlert] = useState(null);
-
-  const storedMode = localStorage.getItem('mode') || 'light';
-  const [mode, setMode] = useState(storedMode);
+  const initialColor = localStorage.getItem('mode') || 'light';
+  const [mode, setMode] = useState(initialColor);
 
   useEffect(() => {
     document.body.style.backgroundColor = mode === 'light' ? '#ffffff' : '#202124';
@@ -58,12 +58,13 @@ function App() {
         <Router>
           <Navbar mode={mode} toggleMode={toggleMode} />
           <Alert alert={alert} />
-          <div className="container mt-5">
+          <div className="container mt-3">
             <Routes>
-              <Route exact path='/' element={<Home showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
-              <Route exact path='/about' element={<About mode={mode} toggleMode={toggleMode} />} />
-              <Route exact path='/login' element={<Login showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
-              <Route exact path='/signup' element={<SignUp showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
+              <Route path='/' element={<Home showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
+              <Route path='/about' element={<About mode={mode} toggleMode={toggleMode} />} />
+              <Route path='/login' element={<Login showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
+              <Route path='/signup' element={<SignUp showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
+              <Route path='/bin' element={<Bin showAlert={showAlert} mode={mode} toggleMode={toggleMode} />} />
             </Routes>
           </div>
         </Router>

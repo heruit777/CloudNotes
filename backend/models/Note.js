@@ -21,6 +21,10 @@ const NotesSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    expireAt: {
+        type: Date,
+        expires: 1,
     }
 }, {strict: false})
 
