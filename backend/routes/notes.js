@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fetchuser = require('../middleware/fetchuser');
 const Note = require('../models/Note');
+const Folder = require('../models/Folder')
 const { body, validationResult } = require('express-validator');
 const NOTE_EXPIRATION_TIME = 84600*30*1000; // 30days 1 day = 84600seconds and 30 days, but we want in ms so * by 1000
 
@@ -9,9 +10,24 @@ const NOTE_EXPIRATION_TIME = 84600*30*1000; // 30days 1 day = 84600seconds and 3
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
     try {
         const notes = await Note.find({ user: req.user.id}).sort({date: -1});
-        res.json(notes)
+        res.status(200).json(notes)
     } catch (error) {
         console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+router.get('/fetch/:directoryName', fetchuser, async (req, res) => {
+    try{
+        let data;
+        if(req.params.directoryName !== 'undefined'){
+            data = await Note.find({user: req.user.id, parent: req.params.directoryName}).sort({date: -1});
+        } else {
+            data = await Note.find({user: req.user.id, parent: null}).sort({date: -1})
+        }
+        res.status(200).json(data)
+    } catch (err){
+        console.log(err);
         res.status(500).send("Internal Server Error");
     }
 })
@@ -116,6 +132,19 @@ router.delete('/deletenote/:id', fetchuser, async (req, res) => {
         res.json({ "Success": "Note is deleted successfully", note: note });
     } catch (error) {
         console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+// ROUTE 5: Create a folder
+router.post('/createFolder', fetchuser, async(req, res)=>{
+    try{
+        const {name} = req.body;
+        const folder = new Folder({name, user: req.user.id})
+        const savedFolder = await folder.save()
+        res.status(201).json(savedFolder);
+    } catch(err){
+        console.error(err)
         res.status(500).send("Internal Server Error");
     }
 })
