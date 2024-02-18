@@ -3,11 +3,12 @@ import noteContext from '../context/notes/noteContext';
 import NoteItem from './NoteItem';
 import FolderItem from "./FolderItem";
 import AddNote from './AddNote';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import BreadCrumbs from './Breadcrumbs';
 function Notes(props) {
     const context = useContext(noteContext);
     const {directoryId} = useParams();
-    const { notes, getNotes, editNote, deleteNote, pinnedNotes, getPinnedNotes, directoryContent, getDirectoryContent } = context;
+    const { editNote, deleteNote, pinnedNotes, getPinnedNotes, directoryContent, getDirectoryContent, breadCrumbPath } = context;
     let navigate = useNavigate();
     const descriptionRef = useRef("");
     const titleRef = useRef("");
@@ -17,26 +18,25 @@ function Notes(props) {
     const [isDisabledUpdate, setIsDisabledUpdate] = useState(true)
     const { mode } = props;
 
-    const formatId = (str) => {
-        if(!str){
-            return undefined;
-        }
-        const arr = str.split('-');
-        return arr[arr.length-1];
-        // console.log(str)
-    }
-
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            getNotes();
+            console.log('fetch')
             getPinnedNotes();
-            getDirectoryContent(formatId(directoryId));
+            getDirectoryContent(directoryId);
         }
         else {
             navigate('/signup');
         }
         // eslint-disable-next-line
-    }, [])
+    },[directoryId])
+
+    // useEffect(()=>{
+    //     console.log('notes rendered');
+    // },[directoryId])
+
+    // useEffect(() => {
+    //     console.log(directoryContent)
+    // }, [directoryContent])
 
     const updateNote = (currentNote) => {
         ref.current.click();
@@ -75,7 +75,7 @@ function Notes(props) {
 
     return (
         <>
-            <AddNote showAlert={props.showAlert} mode={mode} />
+            <AddNote showAlert={props.showAlert} mode={mode} path={directoryId}/>
             <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal" ref={ref}></button>
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog" >
@@ -117,20 +117,20 @@ function Notes(props) {
                     <div className="row">
                         <h3 className="my-1 mb-4" style={{ textAlign: 'center', color: props.mode === 'light' ? 'black' : 'white' }}>Pinned</h3>
                         {pinnedNotes.map((note) => {
-                            return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} isPinned={true} />
+                            return <NoteItem note={note} key={note._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} isPinned={true} path={directoryId}/>
                         })}
                     </div>
                 </div>
             )}
             <div className={`signup-container ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id='Notes' style={{ width: '95%', boxShadow: 'none' }}>
                 <div className="row">
-                    <h3 className="my-1 mb-4" style={{ textAlign: 'center', color: props.mode === 'light' ? 'black' : 'white' }}>Your Notes & Folders</h3>
+                    {breadCrumbPath.current.length > 0 ? <BreadCrumbs /> : <h3 className="my-1 mb-4" style={{ textAlign: 'center', color: props.mode === 'light' ? 'black' : 'white' }}>Your Notes & Folders</h3>}
                     {directoryContent.map((item) => {
                         // item can be note or folder depends on item.typeName
                         if(item.typeName === 'note'){
-                            return <NoteItem note={item} key={item._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} isPinned={false} />
+                            return <NoteItem note={item} key={item._id} showAlert={props.showAlert} updateNote={updateNote} mode={mode} isPinned={false} path={directoryId} />
                         } else if(item.typeName === 'folder'){
-                            return <FolderItem folder={item} key={item._id} mode={mode}/>
+                            return <FolderItem folder={item} key={item._id} mode={mode} path={directoryId} showAlert={props.showAlert}/>
                         } else {
                             return <h1>Error in Notes.js line 126</h1>
                         }

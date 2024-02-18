@@ -4,6 +4,7 @@ const fetchuser = require('../middleware/fetchuser');
 const Note = require('../models/Note');
 const Folder = require('../models/Folder')
 const { body, validationResult } = require('express-validator');
+const { default: mongoose } = require('mongoose');
 const NOTE_EXPIRATION_TIME = 84600*30*1000; // 30days 1 day = 84600seconds and 30 days, but we want in ms so * by 1000
 
 // ROUTE 1: Get All the Notes using: GET "/api/notes/getuser". Login required
@@ -20,10 +21,12 @@ router.get('/fetchallnotes', fetchuser, async (req, res) => {
 router.get('/fetch/:directoryId', fetchuser, async (req, res) => {
     try{
         let data;
-        if(req.params.directoryId !== 'none'){
+        if(mongoose.Types.ObjectId.isValid(req.params.directoryId)){
             data = await Note.find({user: req.user.id, parent: req.params.directoryId}).sort({date: -1});
-        } else {
+        } else if(req.params.directoryId === 'none'){
             data = await Note.find({user: req.user.id, parent: null}).sort({date: -1})
+        } else {
+            data = [];
         }
         res.status(200).json(data)
     } catch (err){
@@ -151,6 +154,36 @@ router.post('/createFolder', fetchuser, async(req, res)=>{
         res.status(201).json(savedFolder);
     } catch(err){
         console.error(err)
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+const deleteItselfAndChildren = async (id) => {
+    let folder = await Folder.findByIdAndDelete(id);
+    let children = await Folder.find({parent: id});
+    if(!children){
+        return;
+    }
+    for(let child of children){
+        await deleteItselfAndChildren(child._id);
+    }
+}
+
+router.delete('/deletefolder/:id', fetchuser, async(req, res) => {
+    try{
+        // Find the folder to be delete and delete it
+        let folder = await Folder.findById(req.params.id);
+        if (!folder) { return res.status(404).send("Not Found") }
+
+        // Allow deletion only if user owns this folder
+        if (folder.user.toString() !== req.user.id) {
+            return res.status(401).send("Not Allowed");
+        }
+
+        await deleteItselfAndChildren(req.params.id);
+        res.json({ "Success": "folder is deleted successfully", folder: folder });
+    } catch (err){
+        console.log(err);
         res.status(500).send("Internal Server Error");
     }
 })

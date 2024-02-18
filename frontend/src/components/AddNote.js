@@ -12,18 +12,9 @@ function AddNote(props) {
     const [note, setNote] = useState({ title: "", description: "", tag: "" })
     const [folderName, setFolderName] = useState("");
 
-    const formatId = (str) => {
-        if(!str || str === '/'){
-            return undefined;
-        }
-        const arr = str.split('-');
-        return arr[arr.length-1];
-    }
-
     const handleClick = (e) => {
         e.preventDefault();
-        
-        addNote(note.title, note.description, note.tag, formatId(window.location.pathname));
+        addNote(note.title, note.description, note.tag, props.path);
         descriptionRef.current.innerHTML = "";
         titleRef.current.innerHTML = "";
         props.showAlert("Added Successfully", "success");
@@ -38,10 +29,11 @@ function AddNote(props) {
         const cleanedContent = e.target.innerHTML.replace(/&nbsp;/g, " ").trim();
         setNote({ ...note, [e.target.getAttribute('name')]: cleanedContent });
     };
-
+    
     const handleCreateFolderClick = () => {
         setFolderName("");
-        createFolder(folderName, formatId(window.location.pathname));
+        createFolder(folderName, props.path);
+        props.showAlert("Created folder Successfully", "success");
     }
 
     const handlefolderName = (e) => {

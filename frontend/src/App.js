@@ -17,6 +17,10 @@ function App() {
   const [mode, setMode] = useState(initialColor);
 
   useEffect(() => {
+    console.log('app rendered');
+  }, [])
+
+  useEffect(() => {
     document.body.style.backgroundColor = mode === 'light' ? '#ffffff' : '#202124';
     localStorage.setItem('mode', mode);
   }, [mode]);
