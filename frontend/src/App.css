@@ -189,6 +189,15 @@ span {
   margin: 15px;
 }
 
+.dropdown-item:hover{
+  cursor: pointer;
+  background-color: #22A7F0;
+}
+
+.active-path{
+  background-color: #0979b5;
+}
+
 @media screen and (max-width: 768px) {
   .container {
     margin-top: 15px !important;

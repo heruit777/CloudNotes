@@ -1,7 +1,6 @@
 import './App.css';
 import Home from './components/Home';
 import About from './components/About';
-import Notes from './components/Notes';
 import Navbar from './components/Navbar';
 import Alert from './components/Alert';
 import Bin from './components/Bin';
@@ -15,10 +14,6 @@ function App() {
   const [alert, setAlert] = useState(null);
   const initialColor = localStorage.getItem('mode') || 'light';
   const [mode, setMode] = useState(initialColor);
-
-  useEffect(() => {
-    console.log('app rendered');
-  }, [])
 
   useEffect(() => {
     document.body.style.backgroundColor = mode === 'light' ? '#ffffff' : '#202124';
@@ -55,7 +50,7 @@ function App() {
 
   return (
     <>
-      <NoteSate>
+      <NoteSate showAlert={showAlert}>
         <Router>
           <Navbar mode={mode} toggleMode={toggleMode} />
           <Alert alert={alert} />
@@ -66,7 +61,7 @@ function App() {
               <Route path='/login' element={<Login showAlert={showAlert} mode={mode} />} />
               <Route path='/signup' element={<SignUp showAlert={showAlert} mode={mode} />} />
               <Route path='/bin' element={<Bin showAlert={showAlert} mode={mode} />} />
-              <Route path='/:directoryId' element={<Notes showAlert={showAlert} mode={mode} />} />
+              <Route path='/:directoryId' element={<Home showAlert={showAlert} mode={mode} />} />
             </Routes>
           </div>
         </Router>

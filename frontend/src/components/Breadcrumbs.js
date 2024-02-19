@@ -1,19 +1,14 @@
-import React, { useContext, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link} from "react-router-dom";
 import noteContext from "../context/notes/noteContext";
 
 const BreadCrumbs = () => {
     const context = useContext(noteContext);
-    const {breadCrumbPath} = context;
-    const location = useLocation();
-    useEffect(() => {
-        if(location.pathname === '/'){
-            breadCrumbPath.current = [];
-        }
-    })
+    const {breadCrumbPath, setBreadCrumbPath, setCurrentFolderName} = context;
+
     const handleClick = (e) => {
         let flag = false;
-        let res = breadCrumbPath.current.reduce((acc, val)=>{
+        let res = breadCrumbPath.reduce((acc, val)=>{
             if(val.name === e.target.name){
                 flag = true;
                 acc.push(val);
@@ -22,21 +17,22 @@ const BreadCrumbs = () => {
             }
             return acc;
         }, [])
-        breadCrumbPath.current = res;
-        console.log(res);
+        setBreadCrumbPath(res);
+        setCurrentFolderName(e.target.name);
     }
 
     return (
-        <div>
-            <ul style={{ listStyleType: "none", display: "flex", width: 'fit-content' }}>
-                {breadCrumbPath.current.map((directoryObj, index) => {
-                    return <li style={{listStyleType: "none"}} key={index}>
-                        <Link to={'/'+directoryObj.url} onClick={handleClick} name={directoryObj.name}>
-                            {directoryObj.name}/
-                        </Link>
-                    </li>
+        <div aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                {breadCrumbPath.map((directoryObj, index) => {
+                    return <li key={index} className="breadcrumb-item active">
+                        <Link to={'/'+directoryObj.url} style={{textDecoration: "none"}} onClick={handleClick} name={directoryObj.name} >
+                                {directoryObj.name}
+                            </Link>
+                    </li> 
+                    
                 })}
-            </ul>
+            </ol>
         </div>
     )
 }

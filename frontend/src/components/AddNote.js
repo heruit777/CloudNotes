@@ -1,13 +1,11 @@
 import React, { useContext, useState, useRef } from 'react';
 import noteContext from '../context/notes/noteContext';
-import { Link } from "react-router-dom";
 
 function AddNote(props) {
     const context = useContext(noteContext);
-    const { addNote, createFolder } = context;
+    const { addNote, createFolder, currentFolderName, createFolderRef } = context;
     const descriptionRef = useRef("");
     const titleRef = useRef("");
-    const ref = useRef(null);
 
     const [note, setNote] = useState({ title: "", description: "", tag: "" })
     const [folderName, setFolderName] = useState("");
@@ -41,19 +39,10 @@ function AddNote(props) {
     }
     return (
         <>
-            <div className={`${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} style={{
-                display: 'flex', justifyContent: 'space-evenly', borderRadius: "8px",
-                boxShadow: '0 0 8px rgba(0, 0, 0, 0.3)', width: 'fit-content', margin: 'auto', padding: '10px',
-            }}>
-                <i className="fa-solid fa-folder-plus" title="Create folder" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }} onClick={() => { ref.current.click(); }}>
-                </i>
-                <Link className='nav-link' to="/bin">
-                    <i className="fa-solid fa-eye" title="See Recycle Bin" style={{ color: props.mode === 'light' ? 'lightColor' : 'darkColor' }}></i>
-                </Link>
-            </div>
             <div className={`signup-container mt-3 mb-5 ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`} id='addNote' style={{ width: '70%' }} >
                 <div>
                     <form className="form mx-auto" id='addNote' style={{ width: '90%' }}>
+                        <p style={{textAlign: 'center'}}>Inside {currentFolderName} folder</p>
                         <h1 style={{ textAlign: 'center' }}>Take a note...</h1>
                         <div className="mb-2">
                             <label htmlFor="title" className="form-label">Title</label>
@@ -78,7 +67,7 @@ function AddNote(props) {
                     </form>
                 </div>
             </div>
-            <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal1" ref={ref}></button>
+            <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal1" ref={createFolderRef}></button>
             <div className="modal fade" id="exampleModal1" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog" >
                     <div className={`modal-content ${props.mode === 'light' ? 'signupContainer-light' : 'signupContainer-dark'}`}>

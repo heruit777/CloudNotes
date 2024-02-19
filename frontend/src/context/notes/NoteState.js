@@ -6,7 +6,9 @@ const NoteSate = (props) => {
     const [directoryContent, setDirectoryContent] = useState([]);
     const [pinnedNotes, setPinnedNotes] = useState([]);
     const [trashedNotes, setTrashedNotes] = useState([]);
-    const breadCrumbPath = useRef([]);
+    const [breadCrumbPath, setBreadCrumbPath] = useState([]);
+    const [currentFolderName, setCurrentFolderName] = useState("Home");
+    const createFolderRef = useRef();
 
     const formatParentPathName = (str) => {
         if(!str || str === '/'){
@@ -37,11 +39,12 @@ const NoteSate = (props) => {
     }
 
     // EDIT
-    const editNote = async (id, title, description, tag, pinnedAt, expireAt) => {
+    const editNote = async (id, title, description, tag, pinnedAt, expireAt, parentName) => {
         const requestData = {};
         if (title) { requestData.title = title };
         if (description) { requestData.description = description };
         if (tag) { requestData.tag = tag };
+        if (parentName) {requestData.parentName = parentName};
 
         if(typeof pinnedAt === 'number' && Date.now() >= pinnedAt){
             requestData.pinnedAt = {
@@ -73,15 +76,24 @@ const NoteSate = (props) => {
             body: JSON.stringify(requestData)
         });
         const res = await noteData.json();
-        console.log(res);
         let newNotes = directoryContent.filter((n) => n._id === id);
         if(newNotes.length){
-            setDirectoryContent(directoryContent.map((val)=>{
-                if(val._id === id){
-                    return {...val, title, description, tag};
+            
+            // setDirectoryContent(directoryContent.map((val)=>{
+            //     if(val._id === id){
+            //         return {...val, title, description, tag};
+            //     }
+            //     return val;
+            // }))
+            setDirectoryContent(directoryContent.reduce((acc, val) => {
+                if(val._id === id && val.parent === res.note.parent){
+                    acc.push({...val, title, description, tag, expireAt, pinnedAt, parent: parentName});
                 }
-                return val;
-            }))
+                if(val._id !== id){
+                    acc.push(val);
+                }
+                return acc;
+            }, []))
         } else {
             setPinnedNotes(pinnedNotes.map((val) => {
                 if(val._id === id){
@@ -168,13 +180,16 @@ const NoteSate = (props) => {
             body: JSON.stringify(sendData)
         })
         const directory = await data.json();
-        setDirectoryContent([directory, ...directoryContent])
+        if(data.status === 201){
+            setDirectoryContent([directory, ...directoryContent])
+        } else if(data.status === 409) {
+            props.showAlert(directory.error, "danger")
+        }
     }
 
     // get directory content based on directory name
     const getDirectoryContent = async(directoryId) => {
         directoryId = formatParentPathName(directoryId);
-        // console.log(directoryId)
         if(!directoryId){
             directoryId = 'none';
         }
@@ -186,14 +201,37 @@ const NoteSate = (props) => {
             }
         })
         const directories = await data.json();
-        // console.log(directories)
         setDirectoryContent(directories.filter((val) => {
             return !val.expireAt && !val.pinnedAt;
         }));
     }
 
+    const getPath = async(objectId) => {
+        const data = await fetch(`${host}/api/notes/path/${objectId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type':'application/json',
+                'auth-token': localStorage.getItem('token')
+            }
+        })
+        const path = await data.json();
+        return path;
+    }
+
+    const getAllFolderPaths = async() => {
+        const data = await fetch(`${host}/api/notes/getAllFolderPaths`, {
+            method: 'GET',
+            headers: {
+                'Content-Type':'application/json',
+                'auth-token': localStorage.getItem('token')
+            }
+        })
+        const path = await data.json();
+        return path;
+    }
+
     return (
-        <NoteContext.Provider value={{ addNote, editNote, deleteNote, pinnedNotes, setPinnedNotes, getPinnedNotes, trashedNotes, setTrashedNotes, getTrashedNotes, createFolder, getDirectoryContent, directoryContent, setDirectoryContent, formatParentPathName, deleteFolder, breadCrumbPath }}>
+        <NoteContext.Provider value={{ addNote, editNote, deleteNote, pinnedNotes, setPinnedNotes, getPinnedNotes, trashedNotes, setTrashedNotes, getTrashedNotes, createFolder, getDirectoryContent, directoryContent, setDirectoryContent, formatParentPathName, deleteFolder, breadCrumbPath, setBreadCrumbPath, getPath, currentFolderName, setCurrentFolderName, getAllFolderPaths, createFolderRef }}>
             {props.children}
         </NoteContext.Provider>
     )

@@ -3,16 +3,13 @@ import noteContext from "../context/notes/noteContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const FolderItem = (props) => {
-    const { folder, mode, path, showAlert } = props;
-    // console.log(path);
+    const { folder, mode, showAlert } = props;
     const context = useContext(noteContext);
-    const { getDirectoryContent, deleteFolder, breadCrumbPath } = context;
+    const { getDirectoryContent, deleteFolder, breadCrumbPath, setBreadCrumbPath, setCurrentFolderName } = context;
     let navigate = useNavigate();
     let location = useLocation();
-    // console.log(location.state)
     useEffect(() => {
         getDirectoryContent(location.pathname);
-        // console.log(location.pathname);
         //eslint-disable-next-line
     }, [location])
 
@@ -24,18 +21,21 @@ const FolderItem = (props) => {
 
     const handleClick = async () => {
         navigate(`/${formatFolderName(folder.name)}${folder._id}`);
-        if(breadCrumbPath.current.length === 0){
-            breadCrumbPath.current.push({
-                name: 'Home',
-                url:''
-            });
-        }
-        breadCrumbPath.current.push(
-            {
+        if (breadCrumbPath.length > 0) {
+            setBreadCrumbPath([...breadCrumbPath, {
                 name: folder.name,
-                url: formatFolderName(folder.name)+folder._id
-            }
-        );
+                url: formatFolderName(folder.name) + folder._id
+            }])
+        } else {
+            setBreadCrumbPath([{
+                name: 'Home',
+                url: ''
+            },{
+                name: folder.name,
+                url: formatFolderName(folder.name) + folder._id
+            }])
+        }
+        setCurrentFolderName(folder.name);
     }
 
     const handleDeleteFolderClick = (e) => {
